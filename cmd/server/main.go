@@ -1,14 +1,25 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	routing "github.com/go-ozzo/ozzo-routing/v2"
+	"go-rest-api/pkg/log"
 	"net/http"
 	"os"
 )
 
+var Version = "1.0.0"
+
+var flagConfig = flag.String("config", "./config/local.yml", "path to the config file")
+
 func main() {
-	// todo config
+	flag.Parse()
+	// create root logger tagged with server version
+	logger := log.New().With(nil, "version", Version)
+
+	// load application configurations
+	//cfg, err := config.Load()
 
 	// todo db connect
 
@@ -16,7 +27,7 @@ func main() {
 	address := fmt.Sprintf(":%v", 8080)
 	hs := &http.Server{
 		Addr:    address,
-		Handler: buildHandler(),
+		Handler: buildHandler(logger),
 	}
 
 	// start http server with graceful shutdown
@@ -26,7 +37,7 @@ func main() {
 	}
 }
 
-func buildHandler() http.Handler {
+func buildHandler(logger log.Logger) http.Handler {
 	router := routing.New()
 
 	return router
