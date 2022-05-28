@@ -9,6 +9,7 @@ import (
 	routing "github.com/go-ozzo/ozzo-routing/v2"
 	_ "github.com/lib/pq"
 	"go-rest-api/internal/config"
+	"go-rest-api/internal/healthcheck"
 	"go-rest-api/pkg/log"
 	"net/http"
 	"os"
@@ -87,7 +88,7 @@ func buildHandler(logger log.Logger, cfg *config.Config) http.Handler {
 
 	// todo use middlewares
 
-	// todo healthcheck
+	healthcheck.RegisterHandler(router, Version)
 
 	//rg := router.Group("/v1")
 
