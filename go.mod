@@ -11,7 +11,9 @@ require (
 )
 
 require (
+	github.com/go-ozzo/ozzo-dbx v1.5.0 // indirect
 	github.com/go-ozzo/ozzo-routing/v2 v2.4.0 // indirect
+	github.com/lib/pq v1.10.6 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.8.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
