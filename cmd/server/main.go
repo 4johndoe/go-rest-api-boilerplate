@@ -53,7 +53,7 @@ func main() {
 	}
 
 	// start http server with graceful shutdown
-	fmt.Println("server %v is running at %v", address)
+	logger.Infof("server %v is running at %v", address)
 	if err := hs.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		os.Exit(-1)
 	}
@@ -63,7 +63,7 @@ func main() {
 func logDBQuery(logger log.Logger) dbx.QueryLogFunc {
 	return func(ctx context.Context, t time.Duration, sql string, rows *sql.Rows, err error) {
 		if err == nil {
-			logger.With(ctx, "duration", t.Milliseconds(), "sql", sql).Info("DB execution successful")
+			logger.With(ctx, "duration", t.Milliseconds(), "sql", sql).Info("DB query successful")
 		} else {
 			logger.With(ctx, "sql", sql).Errorf("DB query error: %v", err)
 		}
