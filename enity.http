@@ -3,6 +3,6 @@ GET http://localhost:8080
 
 > {%
 client.test("Request executed successfully", function() {
-  client.assert(response.status === 200, "Response status is not 200");
+  client.assert(response.status === 404, "Response status is not 200");
 });
 %}
