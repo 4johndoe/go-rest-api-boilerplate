@@ -53,6 +53,7 @@ func main() {
 	}
 
 	// start http server with graceful shutdown
+	go routing.GracefulShutdown(hs, 10*time.Second, logger.Infof)
 	logger.Infof("server %v is running at %v", address)
 	if err := hs.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		os.Exit(-1)
@@ -83,6 +84,18 @@ func logDBExec(logger log.Logger) dbx.ExecLogFunc {
 
 func buildHandler(logger log.Logger, cfg *config.Config) http.Handler {
 	router := routing.New()
+
+	// todo use middlewares
+
+	// todo healthcheck
+
+	//rg := router.Group("/v1")
+
+	// todo authHandler
+
+	// todo register album handlers
+
+	// todo register auth handlers
 
 	return router
 }
