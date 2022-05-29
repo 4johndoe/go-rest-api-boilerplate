@@ -1,5 +1,19 @@
 services:
-#  server: TODO:
+#  server:
+#    image: server
+#    build:
+#      context: .
+#      dockerfile: cmd/server/Dockerfile
+#    volumes:
+#      - .:/var/log/app
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      - APP_ENV=local
+#      - APP_DSN=postgres://db/go_restful?sslmode=disable&user=postgres&password=postgres
+#    depends_on:
+#      db:
+#        condition: service_healthy
   db:
     image: "postgres:alpine"
     restart: always
