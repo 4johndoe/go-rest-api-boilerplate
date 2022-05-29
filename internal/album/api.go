@@ -2,7 +2,10 @@ package album
 
 import (
 	routing "github.com/go-ozzo/ozzo-routing/v2"
+	"go-rest-api/internal/errors"
 	"go-rest-api/pkg/log"
+	"go-rest-api/pkg/pagination"
+	"net/http"
 )
 
 // RegisterHandlers sets up the routing of the HTTP handlers. todo add authHandler routing.Handler,
@@ -10,6 +13,7 @@ func RegisterHandler(r *routing.RouteGroup, service Service, logger log.Logger) 
 	res := resource{service, logger}
 
 	r.Get("/albums/<id>", res.get)
+	r.Get("/albums", res.query)
 }
 
 type resource struct {
@@ -24,4 +28,33 @@ func (r resource) get(c *routing.Context) error {
 	}
 
 	return c.Write(album)
+}
+
+func (r resource) query(c *routing.Context) error {
+	ctx := c.Request.Context()
+	count, err := r.service.Count(ctx)
+	if err != nil {
+		return err
+	}
+	pages := pagination.NewFromRequest(c.Request, count)
+	albums, err := r.service.Query(ctx, pages.Offset(), pages.Limit())
+	if err != nil {
+		return err
+	}
+	pages.Items = albums
+	return c.Write(pages)
+}
+
+func (r resource) create(c *routing.Context) error {
+	var input CreateAlbumRequest
+	if err := c.Read(&input); err != nil {
+		r.logger.With(c.Request.Context()).Info(err)
+		return errors.BadRequest("")
+	}
+	album, err := r.service.Create(c.Request.Context(), input)
+	if err != nil {
+		return err
+	}
+
+	return c.WriteWithStatus(album, http.StatusCreated)
 }
