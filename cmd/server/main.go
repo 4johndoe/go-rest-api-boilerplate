@@ -8,8 +8,10 @@ import (
 	dbx "github.com/go-ozzo/ozzo-dbx"
 	routing "github.com/go-ozzo/ozzo-routing/v2"
 	_ "github.com/lib/pq"
+	"go-rest-api/internal/album"
 	"go-rest-api/internal/config"
 	"go-rest-api/internal/healthcheck"
+	"go-rest-api/pkg/dbcontext"
 	"go-rest-api/pkg/log"
 	"net/http"
 	"os"
@@ -50,7 +52,7 @@ func main() {
 	address := fmt.Sprintf(":%v", cfg.ServerPort)
 	hs := &http.Server{
 		Addr:    address,
-		Handler: buildHandler(logger, cfg),
+		Handler: buildHandler(logger, dbcontext.New(db), cfg),
 	}
 
 	// start http server with graceful shutdown
@@ -83,18 +85,22 @@ func logDBExec(logger log.Logger) dbx.ExecLogFunc {
 	}
 }
 
-func buildHandler(logger log.Logger, cfg *config.Config) http.Handler {
+func buildHandler(logger log.Logger, db *dbcontext.DB, cfg *config.Config) http.Handler {
 	router := routing.New()
 
 	// todo use middlewares
 
 	healthcheck.RegisterHandler(router, Version)
 
-	//rg := router.Group("/v1")
+	rg := router.Group("/v1")
 
 	// todo authHandler
 
-	// todo register album handlers
+	// register album handlers
+	album.RegisterHandler(rg.Group(""),
+		album.NewService(album.NewRepository(db, logger), logger),
+		logger,
+	)
 
 	// todo register auth handlers
 
