@@ -16,3 +16,20 @@ build:  ## build the API server binary
 migrate: ## run all new database migrations
 	@echo "Running all new database migrations..."
 	@$(MIGRATELOCAL) up
+
+.PHONY: migrate-down
+migrate-down: ## revert database to the last migration step
+	@echo "Reverting database to the last migration step..."
+	@$(MIGRATELOCAL) down 1
+
+.PHONY: migrate-new
+migrate-new: ## create a new database migration
+	@read -p "Enter the name of the new migration: " name; \
+	$(MIGRATELOCAL) create -ext sql -dir ./migrations/ $${name// /_}
+
+.PHONY: migrate-reset
+migrate-reset: ## reset database and re-run all migrations
+	@echo "Resetting database..."
+	@$(MIGRATELOCAL) drop
+	@echo "Running all database migrations..."
+	@$(MIGRATELOCAL) up
