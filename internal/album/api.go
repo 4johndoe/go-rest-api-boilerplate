@@ -10,7 +10,7 @@ import (
 )
 
 // RegisterHandlers sets up the routing of the HTTP handlers. todo add authHandler routing.Handler,
-func RegisterHandler(r *routing.RouteGroup, service Service, logger log.Logger) {
+func RegisterHandlers(r *routing.RouteGroup, service Service, logger log.Logger) {
 	res := resource{service, logger}
 
 	r.Get("/albums/<id>", res.get)

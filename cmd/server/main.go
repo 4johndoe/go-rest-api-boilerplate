@@ -97,7 +97,7 @@ func buildHandler(logger log.Logger, db *dbcontext.DB, cfg *config.Config) http.
 	// todo authHandler
 
 	// register album handlers
-	album.RegisterHandler(rg.Group(""),
+	album.RegisterHandlers(rg.Group(""),
 		album.NewService(album.NewRepository(db, logger), logger),
 		logger,
 	)
