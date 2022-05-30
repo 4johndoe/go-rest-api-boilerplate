@@ -14,6 +14,12 @@ func RegisterHandler(r *routing.RouteGroup, service Service, logger log.Logger) 
 
 	r.Get("/albums/<id>", res.get)
 	r.Get("/albums", res.query)
+
+	// todo use authHandler
+
+	// the following endpoints require a valid JWT
+	r.Post("/albums", res.create)
+	r.Put("/albums/<id>", res.update)
 }
 
 type resource struct {
@@ -57,4 +63,19 @@ func (r resource) create(c *routing.Context) error {
 	}
 
 	return c.WriteWithStatus(album, http.StatusCreated)
+}
+
+func (r resource) update(c *routing.Context) error {
+	var input UpdateAlbumRequest
+	if err := c.Read(&input); err != nil {
+		r.logger.With(c.Request.Context()).Info(err)
+		return errors.BadRequest("")
+	}
+
+	album, err := r.service.Update(c.Request.Context(), c.Param("id"), input)
+	if err != nil {
+		return err
+	}
+
+	return c.Write(album)
 }
