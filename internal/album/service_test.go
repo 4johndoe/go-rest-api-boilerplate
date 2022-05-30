@@ -4,10 +4,34 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"github.com/stretchr/testify/assert"
 	"go-rest-api/internal/entity"
+	"testing"
 )
 
 var errCRUD = errors.New("error crud")
+
+func TestCreateAlbumRequest_Validate(t *testing.T) {
+	tests := []struct {
+		name      string
+		model     CreateAlbumRequest
+		wantError bool
+	}{
+		{"success", CreateAlbumRequest{Name: "test"}, false},
+		{"required", CreateAlbumRequest{Name: ""}, true},
+		{"too long", CreateAlbumRequest{Name: "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"}, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := tt.model.Validate()
+			assert.Equal(t, tt.wantError, err != nil)
+		})
+	}
+}
+
+// todo TestUpdateAlbumRequest_Validate
+
+// todo Test_service_CRUD
 
 type mockRepository struct {
 	items []entity.Album
