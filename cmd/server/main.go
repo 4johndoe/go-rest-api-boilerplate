@@ -7,10 +7,13 @@ import (
 	"fmt"
 	dbx "github.com/go-ozzo/ozzo-dbx"
 	routing "github.com/go-ozzo/ozzo-routing/v2"
+	"github.com/go-ozzo/ozzo-routing/v2/content"
+	"github.com/go-ozzo/ozzo-routing/v2/cors"
 	_ "github.com/lib/pq"
 	"go-rest-api/internal/album"
 	"go-rest-api/internal/config"
 	"go-rest-api/internal/healthcheck"
+	"go-rest-api/pkg/accesslog"
 	"go-rest-api/pkg/dbcontext"
 	"go-rest-api/pkg/log"
 	"net/http"
@@ -88,7 +91,12 @@ func logDBExec(logger log.Logger) dbx.ExecLogFunc {
 func buildHandler(logger log.Logger, db *dbcontext.DB, cfg *config.Config) http.Handler {
 	router := routing.New()
 
-	// todo use middlewares
+	router.Use(
+		accesslog.Handler(logger),
+		// todo errors
+		content.TypeNegotiator(content.JSON),
+		cors.Handler(cors.AllowAll),
+	)
 
 	healthcheck.RegisterHandler(router, Version)
 
