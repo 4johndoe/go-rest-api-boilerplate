@@ -1,6 +1,7 @@
 package album
 
 import (
+	"fmt"
 	routing "github.com/go-ozzo/ozzo-routing/v2"
 	"go-rest-api/internal/errors"
 	"go-rest-api/pkg/log"
@@ -20,6 +21,7 @@ func RegisterHandler(r *routing.RouteGroup, service Service, logger log.Logger) 
 	// the following endpoints require a valid JWT
 	r.Post("/albums", res.create)
 	r.Put("/albums/<id>", res.update)
+	r.Delete("/albums/<id>", res.delete)
 }
 
 type resource struct {
@@ -73,6 +75,16 @@ func (r resource) update(c *routing.Context) error {
 	}
 
 	album, err := r.service.Update(c.Request.Context(), c.Param("id"), input)
+	if err != nil {
+		return err
+	}
+
+	return c.Write(album)
+}
+
+func (r resource) delete(c *routing.Context) error {
+	album, err := r.service.Delete(c.Request.Context(), c.Param("id"))
+	fmt.Println(111, album)
 	if err != nil {
 		return err
 	}
