@@ -93,7 +93,7 @@ func buildHandler(logger log.Logger, db *dbcontext.DB, cfg *config.Config) http.
 
 	router.Use(
 		accesslog.Handler(logger),
-		// todo errors
+		//errors.Handler(logger),
 		content.TypeNegotiator(content.JSON),
 		cors.Handler(cors.AllowAll),
 	)
