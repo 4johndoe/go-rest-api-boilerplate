@@ -18,7 +18,11 @@ func TestHandler(t *testing.T) {
 		assert.Zero(t, entries.Len())
 		assert.Equal(t, http.StatusOK, res.Code)
 	})
+
+	// todo some more
 }
+
+// todo Test_buildErrorResponse
 
 func buildContext(handlers ...routing.Handler) (*routing.Context, *httptest.ResponseRecorder) {
 	res := httptest.NewRecorder()
@@ -29,3 +33,9 @@ func buildContext(handlers ...routing.Handler) (*routing.Context, *httptest.Resp
 func handlerOk(c *routing.Context) error {
 	return c.Write("test")
 }
+
+// todo handlerError
+
+// todo handlerHTTPError
+
+// todo handlerPanic
