@@ -12,6 +12,7 @@ import (
 	_ "github.com/lib/pq"
 	"go-rest-api/internal/album"
 	"go-rest-api/internal/config"
+	"go-rest-api/internal/errors"
 	"go-rest-api/internal/healthcheck"
 	"go-rest-api/pkg/accesslog"
 	"go-rest-api/pkg/dbcontext"
@@ -93,7 +94,7 @@ func buildHandler(logger log.Logger, db *dbcontext.DB, cfg *config.Config) http.
 
 	router.Use(
 		accesslog.Handler(logger),
-		//errors.Handler(logger),
+		errors.Handler(logger),
 		content.TypeNegotiator(content.JSON),
 		cors.Handler(cors.AllowAll),
 	)
