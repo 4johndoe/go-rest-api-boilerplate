@@ -32,7 +32,7 @@ func (s service) Login(ctx context.Context, username, password string) (string, 
 	if identity := s.authenticate(ctx, username, password); identity != nil {
 		return s.generateJWT(identity)
 	}
-	return "", errors.Unathorized("")
+	return "", errors.Unauthorized("")
 }
 
 func (s service) authenticate(ctx context.Context, username, password string) Identity {
