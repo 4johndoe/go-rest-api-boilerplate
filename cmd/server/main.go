@@ -104,12 +104,13 @@ func buildHandler(logger log.Logger, db *dbcontext.DB, cfg *config.Config) http.
 
 	rg := router.Group("/v1")
 
-	// todo authHandler
+	// authHandler
+	authHandler := auth.Handler(cfg.JWTSigningKey)
 
 	// register album handlers
 	album.RegisterHandlers(rg.Group(""),
 		album.NewService(album.NewRepository(db, logger), logger),
-		logger,
+		authHandler, logger,
 	)
 
 	// register auth handlers
