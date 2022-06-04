@@ -11,6 +11,7 @@ import (
 	"github.com/go-ozzo/ozzo-routing/v2/cors"
 	_ "github.com/lib/pq"
 	"go-rest-api/internal/album"
+	"go-rest-api/internal/auth"
 	"go-rest-api/internal/config"
 	"go-rest-api/internal/errors"
 	"go-rest-api/internal/healthcheck"
@@ -111,7 +112,11 @@ func buildHandler(logger log.Logger, db *dbcontext.DB, cfg *config.Config) http.
 		logger,
 	)
 
-	// todo register auth handlers
+	// register auth handlers
+	auth.RegisterHandlers(rg.Group(""),
+		auth.NewService(cfg.JWTSigningKey, cfg.JWTExpiration, logger),
+		logger,
+	)
 
 	return router
 }

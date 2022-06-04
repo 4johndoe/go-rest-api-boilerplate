@@ -50,6 +50,16 @@ func NotFound(msg string) ErrorResponse {
 	}
 }
 
+func Unathorized(msg string) ErrorResponse {
+	if msg == "" {
+		msg = "You are not authenticated to perform the requested action."
+	}
+	return ErrorResponse{
+		Status:  http.StatusUnauthorized,
+		Message: msg,
+	}
+}
+
 type invalidField struct {
 	Field string `json:"field"`
 	Error string `json:"error"`
