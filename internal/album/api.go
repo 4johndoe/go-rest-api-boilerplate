@@ -10,14 +10,14 @@ import (
 )
 
 // RegisterHandlers sets up the routing of the HTTP handlers. todo add authHandler routing.Handler,
-func RegisterHandlers(r *routing.RouteGroup, service Service, authHandler routing.Handler, logger log.Logger) {
+func RegisterHandlers(r *routing.RouteGroup, service Service, logger log.Logger) {
 	res := resource{service, logger}
 
 	r.Get("/albums/<id>", res.get)
 	r.Get("/albums", res.query)
 
 	// use authHandler
-	r.Use(authHandler)
+	//r.Use(authHandler)
 
 	// the following endpoints require a valid JWT
 	r.Post("/albums", res.create)

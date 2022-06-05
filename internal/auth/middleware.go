@@ -4,15 +4,14 @@ import (
 	"context"
 	"github.com/dgrijalva/jwt-go"
 	routing "github.com/go-ozzo/ozzo-routing/v2"
-	"github.com/go-ozzo/ozzo-routing/v2/auth"
 	"go-rest-api/internal/entity"
 	"go-rest-api/internal/errors"
 	"net/http"
 )
 
-func Handler(verificationKey string) routing.Handler {
-	return auth.JWT(verificationKey, auth.JWTOptions{TokenHandler: handleToken})
-}
+//func Handler(verificationKey string) routing.Handler {
+//	return auth.JWT(verificationKey, auth.JWTOptions{TokenHandler: handleToken})
+//}
 
 func handleToken(c *routing.Context, token *jwt.Token) error {
 	ctx := WithUser(
